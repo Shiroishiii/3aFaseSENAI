@@ -8,11 +8,14 @@ export async function buscarLivroPorId(livroId) {
     return rows[0]
 }
 
-export async function cadastrarLivro() {
-    const [rows] = await pool.query("INSERT INTO livros (titulo, categoria, valor_unitario, estoque_minimo, estoque_maximo) VALUES ( ?, ? ,?, ?, ?)",
+export async function cadastrarLivro(livro) {
+    const { titulo, categoria, valor_unitario, estoque_minimo, estoque_maximo } = livro
+
+    const [resultado] = await pool.query(
+        "INSERT INTO livros (titulo, categoria, valor_unitario, estoque_minimo, estoque_maximo) VALUES (?, ?, ?, ?, ?)",
         [titulo, categoria, valor_unitario, estoque_minimo, estoque_maximo]
     )
-    console.log(rows)
-    return rows[0]
+
+    return resultado
 }
 
