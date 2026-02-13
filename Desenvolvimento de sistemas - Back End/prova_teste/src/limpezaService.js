@@ -84,30 +84,3 @@ export async function produtosMaiorEntradaNoPeriodo(dataInicial, dataFinal) {
         };
     });
 }
-
-
-
-export async function identificarLimite() {
-    const [rows] = await pool.query{`SELECT p.id AS produto_id, 
-        p.nome_produto,
-p.valor_unitario,
-SUM(
-CASE
-	WHEN m.tipo = 'ENTRADA' THEN m.quantidade
-    WHEN m.tipo = 'SAIDA' THEN -m.quantidade
-	ELSE 0
-END) AS saldo_estoque,
-SUM(
-CASE 
-	WHEN m.tipo = 'ENTRADA' THEN m.quantidade
-    WHEN m.tipo = 'SAIDA' THEN -m.quantidade
-	ELSE 0
-END) * p.valor_unitario AS valor_total_item
-FROM produtos p
-LEFT JOIN movimentacoes m ON m.produto_id = p.id
-GROUP BY p.id,
-p.nome_produto,
-p.valor_unitario`,)
-    console.log(rows)
-    return rows[0]
-}
