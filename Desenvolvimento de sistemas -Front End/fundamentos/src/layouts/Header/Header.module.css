@@ -1,6 +1,10 @@
 .header{
-    background-color: #1e90ff;
+    background-color: #8c52cf;
     color: #fff;
     padding: 20px;
-    text-align: center; 
+    text-align: center;
+}
+
+.title {
+    font-family: "Open Sans", sans-serif;
 }
