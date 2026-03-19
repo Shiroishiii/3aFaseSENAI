@@ -4,13 +4,13 @@
   "steps": [
     {
       "file": "src/index.ts",
-      "description": "Aplicativo express, inicialização do express\r\n",
-      "line": 3
+      "description": "Criação de rotas get\r\n",
+      "line": 7
     },
     {
       "file": "src/index.ts",
-      "description": "Criação de rotas get\r\n",
-      "line": 7
+      "description": "Aplicativo express, inicialização do express\r\n",
+      "line": 3
     },
     {
       "file": "src/index.ts",
