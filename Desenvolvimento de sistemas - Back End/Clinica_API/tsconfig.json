@@ -24,7 +24,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/prisma/hash.ts"  ],
   "exclude": [
     "node_modules"
   ]

@@ -17,6 +17,8 @@ model Usuario {
   id    Int     @id @default(autoincrement())
   email String  @unique
   nome  String?
+  senha String?
+  token Token?
 
   @@map("usuario")
 }
@@ -30,4 +32,16 @@ model Exame {
   data_exame DateTime
 
   @@map("exame")
+}
+
+model Token {
+  id         Int      @id @default(autoincrement())
+  token      String
+  tipo       String
+  revogado   Boolean  @default(false)
+  expiraEm   DateTime
+  usuario    Usuario  @relation(fields: [usuario_id], references: [id])
+  usuario_id Int      @unique
+
+  @@map("token")
 }
