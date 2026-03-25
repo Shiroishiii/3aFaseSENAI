@@ -12,13 +12,8 @@ app.get('/', (req, res) => {
   res.send("Hello world")
 })
 
-// Endpoints usuario
-app.get('/usuarios', async ( _, res) => {
-  const usuarios = await prisma.usuario.findMany();
-  res.json(usuarios);
-})
-
-app.post("/usuarios", async (req, res) => {
+// Endpoint cadastro
+app.post("/cadastro", async (req, res) => {
   console.log(req.body)
   const saltRounds = 10
   const dadosUsuario = req.body as Usuario
@@ -32,6 +27,53 @@ app.post("/usuarios", async (req, res) => {
   })
   return res.status(201).json(usuarioCriado)
 })
+
+// Endpoint login
+app.post ("/login", async (req, res) => {
+  const {email, senha} = req.body as Usuario
+
+  try {
+    if (!email || !senha) {
+      return res.status(400).json({ message: "Email e senha são obrigatórios" })
+    }
+
+    const user = await prisma.usuario.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    if(!user){
+      return res.status(401).json({message: "Credenciais inválidas"})
+    }
+
+    const isPasswordValid = await bcrypt.compare(senha, user.senha)
+
+    if(!isPasswordValid){
+      return res.status(401).json({message: "Credenciais inválidas"})
+    }
+
+    return res.status(200).json({
+      message: "Login realizado com sucesso",
+      user: {
+        id: user.id,
+        email: user.email
+      }
+    })
+    
+  }catch(error){
+    console.error(error)
+    return res.status(500).json({message: 'Erro no servidor'})
+  }
+
+})
+
+// Endpoints usuario
+app.get('/usuarios', async ( _, res) => {
+  const usuarios = await prisma.usuario.findMany();
+  res.json(usuarios);
+})
+
 
 app.get('/usuarios/:id', async (req, res) => {
   const idUsuario = Number(req.params.id)

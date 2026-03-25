@@ -177,7 +177,7 @@ export type UsuarioGroupByOutputType = {
   id: number
   email: string
   nome: string | null
-  senha: string | null
+  senha: string
   _count: UsuarioCountAggregateOutputType | null
   _avg: UsuarioAvgAggregateOutputType | null
   _sum: UsuarioSumAggregateOutputType | null
@@ -207,16 +207,16 @@ export type UsuarioWhereInput = {
   id?: Prisma.IntFilter<"Usuario"> | number
   email?: Prisma.StringFilter<"Usuario"> | string
   nome?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  senha?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  token?: Prisma.XOR<Prisma.TokenNullableScalarRelationFilter, Prisma.TokenWhereInput> | null
+  senha?: Prisma.StringFilter<"Usuario"> | string
+  tokens?: Prisma.TokenListRelationFilter
 }
 
 export type UsuarioOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   nome?: Prisma.SortOrderInput | Prisma.SortOrder
-  senha?: Prisma.SortOrderInput | Prisma.SortOrder
-  token?: Prisma.TokenOrderByWithRelationInput
+  senha?: Prisma.SortOrder
+  tokens?: Prisma.TokenOrderByRelationAggregateInput
 }
 
 export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
@@ -226,15 +226,15 @@ export type UsuarioWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UsuarioWhereInput[]
   NOT?: Prisma.UsuarioWhereInput | Prisma.UsuarioWhereInput[]
   nome?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  senha?: Prisma.StringNullableFilter<"Usuario"> | string | null
-  token?: Prisma.XOR<Prisma.TokenNullableScalarRelationFilter, Prisma.TokenWhereInput> | null
+  senha?: Prisma.StringFilter<"Usuario"> | string
+  tokens?: Prisma.TokenListRelationFilter
 }, "id" | "email">
 
 export type UsuarioOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   nome?: Prisma.SortOrderInput | Prisma.SortOrder
-  senha?: Prisma.SortOrderInput | Prisma.SortOrder
+  senha?: Prisma.SortOrder
   _count?: Prisma.UsuarioCountOrderByAggregateInput
   _avg?: Prisma.UsuarioAvgOrderByAggregateInput
   _max?: Prisma.UsuarioMaxOrderByAggregateInput
@@ -249,57 +249,57 @@ export type UsuarioScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Usuario"> | number
   email?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
   nome?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
-  senha?: Prisma.StringNullableWithAggregatesFilter<"Usuario"> | string | null
+  senha?: Prisma.StringWithAggregatesFilter<"Usuario"> | string
 }
 
 export type UsuarioCreateInput = {
   email: string
   nome?: string | null
-  senha?: string | null
-  token?: Prisma.TokenCreateNestedOneWithoutUsuarioInput
+  senha: string
+  tokens?: Prisma.TokenCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUncheckedCreateInput = {
   id?: number
   email: string
   nome?: string | null
-  senha?: string | null
-  token?: Prisma.TokenUncheckedCreateNestedOneWithoutUsuarioInput
+  senha: string
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type UsuarioUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  token?: Prisma.TokenUpdateOneWithoutUsuarioNestedInput
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  tokens?: Prisma.TokenUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  token?: Prisma.TokenUncheckedUpdateOneWithoutUsuarioNestedInput
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type UsuarioCreateManyInput = {
   id?: number
   email: string
   nome?: string | null
-  senha?: string | null
+  senha: string
 }
 
 export type UsuarioUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type UsuarioUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type UsuarioCountOrderByAggregateInput = {
@@ -352,62 +352,91 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type UsuarioCreateNestedOneWithoutTokenInput = {
-  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutTokenInput, Prisma.UsuarioUncheckedCreateWithoutTokenInput>
-  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutTokenInput
+export type UsuarioCreateNestedOneWithoutTokensInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutTokensInput, Prisma.UsuarioUncheckedCreateWithoutTokensInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutTokensInput
   connect?: Prisma.UsuarioWhereUniqueInput
 }
 
-export type UsuarioUpdateOneRequiredWithoutTokenNestedInput = {
-  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutTokenInput, Prisma.UsuarioUncheckedCreateWithoutTokenInput>
-  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutTokenInput
-  upsert?: Prisma.UsuarioUpsertWithoutTokenInput
+export type UsuarioUpdateOneRequiredWithoutTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UsuarioCreateWithoutTokensInput, Prisma.UsuarioUncheckedCreateWithoutTokensInput>
+  connectOrCreate?: Prisma.UsuarioCreateOrConnectWithoutTokensInput
+  upsert?: Prisma.UsuarioUpsertWithoutTokensInput
   connect?: Prisma.UsuarioWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutTokenInput, Prisma.UsuarioUpdateWithoutTokenInput>, Prisma.UsuarioUncheckedUpdateWithoutTokenInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsuarioUpdateToOneWithWhereWithoutTokensInput, Prisma.UsuarioUpdateWithoutTokensInput>, Prisma.UsuarioUncheckedUpdateWithoutTokensInput>
 }
 
-export type UsuarioCreateWithoutTokenInput = {
+export type UsuarioCreateWithoutTokensInput = {
   email: string
   nome?: string | null
-  senha?: string | null
+  senha: string
 }
 
-export type UsuarioUncheckedCreateWithoutTokenInput = {
+export type UsuarioUncheckedCreateWithoutTokensInput = {
   id?: number
   email: string
   nome?: string | null
-  senha?: string | null
+  senha: string
 }
 
-export type UsuarioCreateOrConnectWithoutTokenInput = {
+export type UsuarioCreateOrConnectWithoutTokensInput = {
   where: Prisma.UsuarioWhereUniqueInput
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutTokenInput, Prisma.UsuarioUncheckedCreateWithoutTokenInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutTokensInput, Prisma.UsuarioUncheckedCreateWithoutTokensInput>
 }
 
-export type UsuarioUpsertWithoutTokenInput = {
-  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutTokenInput, Prisma.UsuarioUncheckedUpdateWithoutTokenInput>
-  create: Prisma.XOR<Prisma.UsuarioCreateWithoutTokenInput, Prisma.UsuarioUncheckedCreateWithoutTokenInput>
+export type UsuarioUpsertWithoutTokensInput = {
+  update: Prisma.XOR<Prisma.UsuarioUpdateWithoutTokensInput, Prisma.UsuarioUncheckedUpdateWithoutTokensInput>
+  create: Prisma.XOR<Prisma.UsuarioCreateWithoutTokensInput, Prisma.UsuarioUncheckedCreateWithoutTokensInput>
   where?: Prisma.UsuarioWhereInput
 }
 
-export type UsuarioUpdateToOneWithWhereWithoutTokenInput = {
+export type UsuarioUpdateToOneWithWhereWithoutTokensInput = {
   where?: Prisma.UsuarioWhereInput
-  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutTokenInput, Prisma.UsuarioUncheckedUpdateWithoutTokenInput>
+  data: Prisma.XOR<Prisma.UsuarioUpdateWithoutTokensInput, Prisma.UsuarioUncheckedUpdateWithoutTokensInput>
 }
 
-export type UsuarioUpdateWithoutTokenInput = {
+export type UsuarioUpdateWithoutTokensInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type UsuarioUncheckedUpdateWithoutTokenInput = {
+export type UsuarioUncheckedUpdateWithoutTokensInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.StringFieldUpdateOperationsInput | string
   nome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  senha?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senha?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+
+/**
+ * Count Type UsuarioCountOutputType
+ */
+
+export type UsuarioCountOutputType = {
+  tokens: number
+}
+
+export type UsuarioCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  tokens?: boolean | UsuarioCountOutputTypeCountTokensArgs
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UsuarioCountOutputType
+   */
+  select?: Prisma.UsuarioCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TokenWhereInput
+}
 
 
 export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -415,7 +444,8 @@ export type UsuarioSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   email?: boolean
   nome?: boolean
   senha?: boolean
-  token?: boolean | Prisma.Usuario$tokenArgs<ExtArgs>
+  tokens?: boolean | Prisma.Usuario$tokensArgs<ExtArgs>
+  _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usuario"]>
 
 export type UsuarioSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -441,7 +471,8 @@ export type UsuarioSelectScalar = {
 
 export type UsuarioOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "nome" | "senha", ExtArgs["result"]["usuario"]>
 export type UsuarioInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  token?: boolean | Prisma.Usuario$tokenArgs<ExtArgs>
+  tokens?: boolean | Prisma.Usuario$tokensArgs<ExtArgs>
+  _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsuarioIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 export type UsuarioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -449,13 +480,13 @@ export type UsuarioIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $UsuarioPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Usuario"
   objects: {
-    token: Prisma.$TokenPayload<ExtArgs> | null
+    tokens: Prisma.$TokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     email: string
     nome: string | null
-    senha: string | null
+    senha: string
   }, ExtArgs["result"]["usuario"]>
   composites: {}
 }
@@ -850,7 +881,7 @@ readonly fields: UsuarioFieldRefs;
  */
 export interface Prisma__UsuarioClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  token<T extends Prisma.Usuario$tokenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$tokenArgs<ExtArgs>>): Prisma.Prisma__TokenClient<runtime.Types.Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  tokens<T extends Prisma.Usuario$tokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Usuario$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1272,9 +1303,9 @@ export type UsuarioDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Usuario.token
+ * Usuario.tokens
  */
-export type Usuario$tokenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Usuario$tokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Token
    */
@@ -1288,6 +1319,11 @@ export type Usuario$tokenArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   include?: Prisma.TokenInclude<ExtArgs> | null
   where?: Prisma.TokenWhereInput
+  orderBy?: Prisma.TokenOrderByWithRelationInput | Prisma.TokenOrderByWithRelationInput[]
+  cursor?: Prisma.TokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TokenScalarFieldEnum | Prisma.TokenScalarFieldEnum[]
 }
 
 /**

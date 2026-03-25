@@ -97,10 +97,10 @@ export type ExameScalarFieldEnum = (typeof ExameScalarFieldEnum)[keyof typeof Ex
 export const TokenScalarFieldEnum = {
   id: 'id',
   token: 'token',
-  tipo: 'tipo',
-  revogado: 'revogado',
-  expiraEm: 'expiraEm',
-  usuario_id: 'usuario_id'
+  type: 'type',
+  revoked: 'revoked',
+  expiresAt: 'expiresAt',
+  usuarioId: 'usuarioId'
 } as const
 
 export type TokenScalarFieldEnum = (typeof TokenScalarFieldEnum)[keyof typeof TokenScalarFieldEnum]

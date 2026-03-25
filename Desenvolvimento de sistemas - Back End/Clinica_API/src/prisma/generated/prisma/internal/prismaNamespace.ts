@@ -692,10 +692,10 @@ export type ExameScalarFieldEnum = (typeof ExameScalarFieldEnum)[keyof typeof Ex
 export const TokenScalarFieldEnum = {
   id: 'id',
   token: 'token',
-  tipo: 'tipo',
-  revogado: 'revogado',
-  expiraEm: 'expiraEm',
-  usuario_id: 'usuario_id'
+  type: 'type',
+  revoked: 'revoked',
+  expiresAt: 'expiresAt',
+  usuarioId: 'usuarioId'
 } as const
 
 export type TokenScalarFieldEnum = (typeof TokenScalarFieldEnum)[keyof typeof TokenScalarFieldEnum]
@@ -784,6 +784,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TypeToken'
+ */
+export type EnumTypeTokenFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeToken'>
+    
+
+
+/**
+ * Reference to a field of type 'TypeToken[]'
+ */
+export type ListEnumTypeTokenFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeToken[]'>
     
 
 
