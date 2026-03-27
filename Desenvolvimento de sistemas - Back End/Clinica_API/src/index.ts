@@ -1,7 +1,10 @@
 import express from 'express';
-import bcrypt from 'bcrypt'
 import { prisma } from './prisma/prisma';
-import type { Exame, Usuario } from './prisma/generated/prisma/client';
+import type { Exame, Usuario, TypeToken } from './prisma/generated/prisma/client';
+import { createHash } from './utils/createHash';
+import bcrypt from "bcrypt";
+import { signTokenAcesso, signTokenRefresh } from './utils/jwt';
+import { auth } from './middleware/auth';
 
 const app = express();
 app.use(express.json())
@@ -12,68 +15,87 @@ app.get('/', (req, res) => {
   res.send("Hello world")
 })
 
-// Endpoint cadastro
+//autenticacao
 app.post("/cadastro", async (req, res) => {
-  console.log(req.body)
-  const saltRounds = 10
   const dadosUsuario = req.body as Usuario
-  const senhaHasheada = await bcrypt.hash(dadosUsuario.senha, saltRounds)
+  const hash = await createHash(dadosUsuario.senha);
   const usuarioCriado = await prisma.usuario.create({
     data: {
       email: dadosUsuario.email,
       nome: dadosUsuario.nome || null,
-      senha: senhaHasheada
+      senha: hash
     }
   })
-  return res.status(201).json(usuarioCriado)
+  return res.status(201).json({
+    message: "Usuário criado com sucesso!",
+    data: usuarioCriado
+  })
 })
 
-// Endpoint login
-app.post ("/login", async (req, res) => {
-  const {email, senha} = req.body as Usuario
-
-  try {
-    if (!email || !senha) {
-      return res.status(400).json({ message: "Email e senha são obrigatórios" })
+app.post("/login", async (req, res) => {
+  const dadosUsuario = req.body as Partial<Usuario>
+  const existeUsuario = await prisma.usuario.findUnique({
+    where: {
+      email: dadosUsuario.email || '',
     }
+  })
+  const credenciaisValidas = await bcrypt.compare(dadosUsuario.senha || "", existeUsuario?.senha || "")
 
-    const user = await prisma.usuario.findUnique({
-      where: {
-        email: email
+  if (existeUsuario && credenciaisValidas) {
+    const tokenAcesso = signTokenAcesso({
+      email: existeUsuario.email,
+      nome: existeUsuario.nome
+    })
+    const tokenRefresh = signTokenRefresh({
+      email: existeUsuario.email,
+      nome: existeUsuario.nome
+    })
+
+    const accessExpires = new Date()
+    const accessExpiresUpdate = accessExpires.setHours(accessExpires.getHours() + 1)
+    // acesso create
+    await prisma.token.create({
+      data: {
+        token: tokenAcesso,
+        expiresAt: new Date(accessExpiresUpdate),
+        type: 'ACCESS',
+        usuarioId: existeUsuario.id
       }
     })
 
-    if(!user){
-      return res.status(401).json({message: "Credenciais inválidas"})
-    }
+    //refresh create
+    const refreshExpires = new Date()
+    const refreshExpiresUpdated = refreshExpires.setMonth(refreshExpires.getMonth() + 1)
 
-    const isPasswordValid = await bcrypt.compare(senha, user.senha)
-
-    if(!isPasswordValid){
-      return res.status(401).json({message: "Credenciais inválidas"})
-    }
+    await prisma.token.create({
+      data: {
+        token: tokenRefresh,
+        expiresAt: new Date(refreshExpiresUpdated),
+        type: 'REFRESH',
+        usuarioId: existeUsuario.id
+      }
+    })
 
     return res.status(200).json({
-      message: "Login realizado com sucesso",
-      user: {
-        id: user.id,
-        email: user.email
-      }
+      message: "Usuário autenticado com sucesso!",
+      accessToken: tokenAcesso,
+      refreshToken: tokenRefresh
     })
-    
-  }catch(error){
-    console.error(error)
-    return res.status(500).json({message: 'Erro no servidor'})
   }
 
+  return res.status(401).json({
+    message: "Credenciais inválidas"
+  })
+
 })
+
+app.use(auth)
 
 // Endpoints usuario
-app.get('/usuarios', async ( _, res) => {
+app.get('/usuarios', async (_, res) => {
   const usuarios = await prisma.usuario.findMany();
-  res.json(usuarios);
+  return res.json(usuarios);
 })
-
 
 app.get('/usuarios/:id', async (req, res) => {
   const idUsuario = Number(req.params.id)
@@ -85,6 +107,20 @@ app.get('/usuarios/:id', async (req, res) => {
 
   return res.status(200).json(usuario);
 })
+
+app.post("/usuarios", async (req, res) => {
+  const dadosUsuario = req.body as Usuario
+  const hash = await createHash(dadosUsuario.senha);
+  const usuarioCriado = await prisma.usuario.create({
+    data: {
+      email: dadosUsuario.email,
+      nome: dadosUsuario.nome || null,
+      senha: hash
+    }
+  })
+  return res.status(201).json(usuarioCriado)
+})
+
 
 app.put("/usuarios/:id", async (req, res) => {
   const idUsuario = Number(req.params.id)
@@ -117,55 +153,54 @@ app.delete('/usuarios/:id', async (req, res) => {
 })
 
 //Exames
-
-app.get('/exame', async (req, res ) => {
-  const exames = await prisma.exame.findMany()
-  res.json(exames)
+app.get('/exames', async (_, res) => {
+  const exames = await prisma.exame.findMany();
+  return res.json(exames);
 })
 
-app.post('/exame', async (req, res) => {
-  console.log (req.body)
-  const dadosExames = req.body as Exame
+app.get('/exames/:id', async (req, res) => {
+  const idExame = Number(req.params.id)
+  const exame = await prisma.exame.findUnique({
+    where: {
+      id: idExame
+    }
+  })
+
+  return res.status(200).json(exame);
+})
+
+app.post("/exames", async (req, res) => {
+  const dadosExame = req.body as Exame
   const exameCriado = await prisma.exame.create({
     data: {
-      tipo_exame: dadosExames.tipo_exame,
-      valor: dadosExames.valor,
-      descricao: dadosExames.descricao,
-      resultado: dadosExames.resultado,
-      data_exame: new Date(dadosExames.data_exame)
+      tipo_exame: dadosExame.tipo_exame,
+      valor: dadosExame.valor,
+      descricao: dadosExame.descricao,
+      data_exame: new Date(dadosExame.data_exame),
+      resultado: dadosExame.resultado
     }
   })
   return res.status(201).json(exameCriado)
 })
 
-app.get('/exame/:id', async (req, res) => {
-  const idExame = Number(req.params.id)
-  const exame = await prisma.exame.findUnique({
-    where:{
-      id: idExame
-    }
-  })
-
-  return res.status(200).json(exame)
-})
-
-app.put ('/exame/:id', async (req, res) => {
+app.put("/exames/:id", async (req, res) => {
   const idExame = Number(req.params.id)
   const dadosParaAtualizar = req.body as Omit<Exame, 'id'>
 
   const exameAtualizado = await prisma.exame.update({
-    data:{
-      ...dadosParaAtualizar
+    data: {
+      ...dadosParaAtualizar,
+      data_exame: new Date(dadosParaAtualizar.data_exame)
     },
-    where:{
-      id:idExame
+    where: {
+      id: idExame
     }
   })
 
-  return res.status(200).json(exameAtualizado)
+  return res.status(200).json(exameAtualizado);
 })
 
-app.delete('/exame/:id', async (req, res) => {
+app.delete('/exames/:id', async (req, res) => {
   const idExame = Number(req.params.id)
   const exameDeletado = await prisma.exame.delete({
     where: {
@@ -174,7 +209,7 @@ app.delete('/exame/:id', async (req, res) => {
   })
 
   return res.status(200).json({
-    mensagem: "Exame deletado com sucesso",
+    mensagem: "Exame deletado com sucesso!",
     data: exameDeletado
   });
 })
