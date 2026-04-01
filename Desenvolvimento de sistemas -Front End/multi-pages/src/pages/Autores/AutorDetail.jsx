@@ -16,8 +16,8 @@ const AutorDetail = () => {
 
   return (
     <div className='p-4'>
-            <img src={autor.foto} alt={autor.nome} />
-            <h1 className='text-x1 font-bold'>{autor.nome}</h1>
+            <img src={autor.foto} alt={autor.nome} className='w-150 h-150'/>
+            <h1 className='text-5xl font-bold'>{autor.nome}</h1>
             <h2>{autor.cidade}</h2>
             <h2>{autor.especialidade}</h2>
             <p>{autor.descricao}</p>
