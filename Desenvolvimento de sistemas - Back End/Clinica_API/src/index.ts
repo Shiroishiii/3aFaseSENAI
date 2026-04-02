@@ -5,9 +5,11 @@ import { createHash } from './utils/createHash';
 import bcrypt from "bcrypt";
 import { signTokenAcesso, signTokenRefresh } from './utils/jwt';
 import { auth } from './middleware/auth';
+import cors from "cors"
 
 const app = express();
 app.use(express.json())
+app.use(cors())
 const port = 3000;
 
 app.get('/', (req, res) => {
