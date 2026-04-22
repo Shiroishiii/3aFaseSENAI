@@ -1,24 +1,26 @@
-import type { PrismaClient } from "@prisma/client/extension";
+import type { PrismaClient, Token, Usuario } from "../prisma/generated/prisma/client";
 import { prisma } from "../prisma/prisma";
-import type { Usuario } from "../prisma/generated/prisma/client";
-
 
 export class UserRepository {
-    constructor(private readonly prisma: PrismaClient){
+    constructor(private readonly prisma: PrismaClient) {
         this.prisma = prisma
     }
 
-    async getAllUser(){
-        return prisma.usuario.findMany()
+    async listarTodosUsuarios() {
+        const usuarios = await prisma.usuario.findMany();
+        return usuarios
     }
 
-    async getUserById(id: number){
-        return prisma.usuario.findUnique({
-            where: {id}
+    async buscarUsuarioId(idUsuario: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: {
+                id: idUsuario
+            }
         })
+        return usuario;
     }
 
-    async postUser(dadosUsuario: Usuario){
+    async criarUsuario(dadosUsuario: Partial<Usuario>) {
         return await this.prisma.usuario.create({
             data: {
                 email: dadosUsuario.email || "",
@@ -26,6 +28,27 @@ export class UserRepository {
                 nome: dadosUsuario.nome || ""
             }
         })
+    }
+
+    async atualizarUsuario(idUsuario: number, dadosParaAtualizar: Omit<Usuario, 'id'>) {
+        const usuarioAtualizado = await prisma.usuario.update({
+            data: {
+                ...dadosParaAtualizar
+            },
+            where: {
+                id: idUsuario
+            }
+        })
+
+        return usuarioAtualizado
+    }
+    async deletarUsuario(idUsuario: number) {
+        const usuario = await prisma.usuario.delete({
+            where: {
+                id: idUsuario
+            }
+        })
+        return usuario;
     }
 }
 
