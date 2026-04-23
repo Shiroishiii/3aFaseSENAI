@@ -2,8 +2,9 @@ import express from 'express';
 import { auth } from './middleware/auth';
 import cors from "cors"
 import { authRouter } from './routes/auth';
-import { UserRouter } from './routes/user';
-import { exameRouter } from './routes/exames';
+import { ExameRouter } from './routes/exames';
+import { usuarioRouter } from './routes/user';
+
 
 const app = express();
 app.use(express.json())
@@ -16,8 +17,8 @@ app.get('/', (req, res) => {
 })
 
 app.use(authRouter)
-app.use(UserRouter)
-app.use(exameRouter)
+app.use(usuarioRouter)
+app.use(ExameRouter)
 
 app.use(auth)
 
