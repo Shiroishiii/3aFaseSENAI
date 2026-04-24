@@ -17,7 +17,8 @@ export class ExamService {
             valor: dadosExame.valor,
             descricao: dadosExame.descricao,
             data_exame: new Date(dadosExame.data_exame),
-            resultado: dadosExame.resultado
+            resultado: dadosExame.resultado,
+            pacienteId: null
         })
         return exameCriado
     }

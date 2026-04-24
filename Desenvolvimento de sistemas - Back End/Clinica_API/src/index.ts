@@ -4,6 +4,7 @@ import cors from "cors"
 import { authRouter } from './routes/auth';
 import { ExameRouter } from './routes/exames';
 import { usuarioRouter } from './routes/user';
+import { PacienteRouter } from './routes/paciente';
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 app.use(authRouter)
 app.use(usuarioRouter)
 app.use(ExameRouter)
+app.use(PacienteRouter)
 
 app.use(auth)
 
