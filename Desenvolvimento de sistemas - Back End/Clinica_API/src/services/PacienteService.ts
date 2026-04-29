@@ -10,7 +10,7 @@ export class PacienteService {
         return pacientes
     }
 
-    async criarPaciente(dadosPaciente: Paciente) {
+    async criarPaciente(dadosPaciente: Omit<Paciente, "id">) {
         const pacienteCriado = await this.repository.criarPaciente({
             nome: dadosPaciente.nome,
             cpf: dadosPaciente.cpf,
@@ -28,7 +28,7 @@ export class PacienteService {
         return paciente;
     }
 
-    async atualizarPaciente(idPaciente: number, dadosParaAtualizar: Paciente) {
+    async atualizarPaciente(idPaciente: number, dadosParaAtualizar: Omit<Paciente, "id">) {
         const pacienteAtualizado = await this.repository.atualizarPaciente(idPaciente, dadosParaAtualizar)
         return pacienteAtualizado;
     }

@@ -4,7 +4,7 @@ import { pacienteController } from "../controllers/PacienteController";
 
 export const PacienteRouter = Router()
 
-// Endpoints usuario
+
 PacienteRouter.get('/paciente', async (_, res) => {
   return pacienteController.listarTodosPaciente(_, res)
 })
