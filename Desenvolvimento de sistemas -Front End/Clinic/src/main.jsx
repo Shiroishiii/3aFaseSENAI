@@ -2,12 +2,12 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
-//react routes
+//react router
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
-// tostify
-import { ToastContainer } from "react-toastify"
+//toastify
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -16,15 +16,14 @@ import { AuthProvider } from './context/AuthContext';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Login />
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
     element: <Dashboard />
   }
-])
-
+]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

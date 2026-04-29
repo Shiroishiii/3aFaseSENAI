@@ -1,9 +1,15 @@
 {
-    "users": [
-        {
-            "id": 1,
-            "email": "joao@email.com",
-            "password": "123456789"
-        }
-    ]
+  "users": [
+    {
+      "id": "1",
+      "email": "joao@email.com",
+      "password": "1234abcd"
+    },
+    {
+      "email": "isaac@email.com",
+      "password": "12345678",
+      "id": "UfVqSIyxrmY"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
