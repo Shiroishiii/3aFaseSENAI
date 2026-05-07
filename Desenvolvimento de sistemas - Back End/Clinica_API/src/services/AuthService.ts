@@ -1,4 +1,4 @@
-import type { Usuario } from "../prisma/generated/prisma/client";
+import { Role, type Usuario } from "../prisma/generated/prisma/client";
 import { createHash } from "../utils/createHash";
 import bcrypt from "bcrypt";
 import { signTokenAcesso, signTokenRefresh } from "../utils/jwt";
@@ -26,11 +26,13 @@ export class AuthService {
         if (existeUsuario && credenciaisValidas) {
             const tokenAcesso = signTokenAcesso({
                 email: existeUsuario.email,
-                nome: existeUsuario.nome
+                nome: existeUsuario.nome,
+                role: existeUsuario.role
             })
             const tokenRefresh = signTokenRefresh({
                 email: existeUsuario.email,
-                nome: existeUsuario.nome
+                nome: existeUsuario.nome,
+                role: existeUsuario.role
             })
 
             const accessExpires = new Date()

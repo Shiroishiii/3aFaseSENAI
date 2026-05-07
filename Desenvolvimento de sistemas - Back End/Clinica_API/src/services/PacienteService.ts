@@ -2,7 +2,7 @@ import type { Paciente } from "../prisma/generated/prisma/client";
 import { pacienteRepository, type PacienteRepository } from "../repositories/PacienteRepository";
 
 export class PacienteService {
-    constructor(private readonly repository: PacienteRepository) { // TO-DO TIPAR SERVICE
+    constructor(private readonly repository: PacienteRepository) {
     }
 
     async listarTodosPacientes() {

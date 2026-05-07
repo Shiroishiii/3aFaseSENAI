@@ -1,6 +1,5 @@
 import type { Usuario } from "../prisma/generated/prisma/client";
 import { createHash } from "../utils/createHash";
-import bcrypt from "bcrypt";
 import { userRepository, type UserRepository } from "../repositories/UserRepository";
 
 export class UserService {
@@ -18,6 +17,7 @@ export class UserService {
         const usuarioCriado = await this.repository.criarUsuario({
             email: dadosUsuario.email,
             nome: dadosUsuario.nome || null,
+            role: dadosUsuario.role || null,
             senha: hash
         })
         return usuarioCriado
