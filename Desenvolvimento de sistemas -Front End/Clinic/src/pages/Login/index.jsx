@@ -1,3 +1,5 @@
+import React from 'react'
+
 import logo from '../../assets/images/logo-clinica.png'
 import LoginForm from '../../components/LoginForm'
 
