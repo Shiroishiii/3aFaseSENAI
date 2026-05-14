@@ -4,7 +4,7 @@ import { Role } from "../prisma/generated/prisma/client";
 import { roleMiddleware } from "../middleware/role";
 
 export const ExameRouter = Router();
-ExameRouter.use(roleMiddleware([Role.ADMIN]))
+// ExameRouter.use(roleMiddleware([Role.ADMIN]))
 
 // Endpoints usuario
 ExameRouter.get('/exames', async (_, res) => {

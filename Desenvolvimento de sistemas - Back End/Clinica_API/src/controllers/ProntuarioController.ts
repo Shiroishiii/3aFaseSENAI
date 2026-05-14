@@ -6,9 +6,12 @@ class ProntuarioController {
     constructor(private readonly service: ProntuarioService) {
     }
 
-    async listarTodosProntuarios(_: Request, res: Response) {
+    async listarTodosProntuarios(req: Request, res: Response) {
         try {
-            const prontuarios = await this.service.listarTodosProntuarios();
+            const pagina = req.query.pagina ? Number(req.query.pagina) : undefined
+            const limite = req.query.limite ? Number(req.query.limite) : undefined
+
+            const prontuarios = await this.service.listarTodosProntuarios(pagina, limite);
             return res.status(200).json(prontuarios)
         } catch (error) {
             console.log(error)

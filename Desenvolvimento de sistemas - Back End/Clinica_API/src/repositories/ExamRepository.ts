@@ -6,9 +6,21 @@ export class ExamRepository {
         this.prisma = prisma
     }
 
-    async listarTodosExames() {
-        const exames = await prisma.exame.findMany();
-        return exames
+    async listarTodosExames(pagina?: number, limite?: number) {
+        const existePaginacao = pagina! && limite!
+        if (!existePaginacao) return await prisma.exame.findMany()
+        const exames = await prisma.exame.findMany({
+            skip: (pagina - 1) * limite,
+            take: limite
+        })
+
+        const total = await prisma.exame.count();
+        const totalPaginas = Math.ceil(total / limite)
+        return {
+            exames,
+            total,
+            totalPaginas
+        }
     }
 
     async buscarExameId(idExame: number) {

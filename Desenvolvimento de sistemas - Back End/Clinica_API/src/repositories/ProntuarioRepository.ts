@@ -7,8 +7,21 @@ export class ProntuarioRepository {
         this.prisma = prisma;
     }
 
-    async listarTodosProntuarios() {
-        return await prisma.prontuario.findMany();
+    async listarTodosProntuarios(pagina?: number, limite?: number) {
+        const existePaginacao = pagina! && limite!
+        if (!existePaginacao) return await prisma.prontuario.findMany()
+        const prontuario = await prisma.prontuario.findMany({
+            skip: (pagina - 1) * limite,
+            take: limite
+        })
+
+        const total = await prisma.prontuario.count();
+        const totalPaginas = Math.ceil(total / limite)
+        return {
+            prontuario,
+            total,
+            totalPaginas
+        }
     }
 
     async buscarProntuarioId(idProntuario: number) {

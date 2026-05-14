@@ -14,7 +14,8 @@ export class AuthService {
         const usuarioCriado = await this.repository.cadastrar({
             email: dadosUsuario.email,
             nome: dadosUsuario.nome || null,
-            senha: hash
+            senha: hash,
+            role: dadosUsuario.role
         })
         return usuarioCriado
     }

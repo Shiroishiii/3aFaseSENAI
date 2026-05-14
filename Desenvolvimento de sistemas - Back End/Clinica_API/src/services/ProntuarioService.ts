@@ -4,8 +4,8 @@ import { prontuarioRepository, type ProntuarioRepository } from "../repositories
 export class ProntuarioService {
     constructor(private readonly repository: ProntuarioRepository) {}
 
-    async listarTodosProntuarios() {
-        return await this.repository.listarTodosProntuarios();
+    async listarTodosProntuarios(pagina?: number, limite?: number) {
+        return await this.repository.listarTodosProntuarios(pagina, limite);
     }
 
     async criarProntuario(dadosProntuario: Omit<Prontuario, "id">) {

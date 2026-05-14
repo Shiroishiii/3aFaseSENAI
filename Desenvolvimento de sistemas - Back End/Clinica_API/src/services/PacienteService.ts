@@ -5,8 +5,8 @@ export class PacienteService {
     constructor(private readonly repository: PacienteRepository) {
     }
 
-    async listarTodosPacientes() {
-        const pacientes = await this.repository.listarTodosPacientes()
+    async listarTodosPacientes(pagina?: number, limite?: number) {
+        const pacientes = await this.repository.listarTodosPacientes(pagina, limite)
         return pacientes
     }
 

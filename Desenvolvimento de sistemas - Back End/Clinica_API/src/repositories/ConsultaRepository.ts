@@ -7,8 +7,21 @@ export class ConsultaRepository {
         this.prisma = prisma;
     }
 
-    async listarTodasConsultas() {
-        return await prisma.consulta.findMany();
+    async listarTodasConsultas(pagina?: number, limite?: number) {
+       const existePaginacao = pagina! && limite!
+        if (!existePaginacao) return await prisma.consulta.findMany()
+        const consultas = await prisma.consulta.findMany({
+            skip: (pagina - 1) * limite,
+            take: limite
+        })
+
+        const total = await prisma.consulta.count();
+        const totalPaginas = Math.ceil(total / limite)
+        return {
+            consultas,
+            total,
+            totalPaginas
+        }
     }
 
     async buscarConsultaId(idConsulta: number) {
