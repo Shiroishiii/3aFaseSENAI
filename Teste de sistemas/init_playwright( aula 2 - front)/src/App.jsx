@@ -58,6 +58,15 @@ function Login({ onLogin }) {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [count, setCount] = useState(0)
+  const [usuarios, setUsuarios] = useState([])
+
+  async function buscarUsuarios() {
+    const response = await fetch('http://localhost:3000/usuarios')
+
+    const data = await response.json()
+
+    setUsuarios(data)
+  }
 
   if (!isLoggedIn) {
     return <Login onLogin={() => setIsLoggedIn(true)} />
@@ -85,6 +94,16 @@ function App() {
           Count is {count}
         </button>
         <button className="logout-link" onClick={() => setIsLoggedIn(false)}>Sair</button>
+        <button onClick={buscarUsuarios}>
+          Buscar usuários
+        </button>
+        <ul>
+          {usuarios.map((usuario) => (
+            <li key={usuario.id}>
+              {usuario.id} - {usuario.nome}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <div className="ticks"></div>
