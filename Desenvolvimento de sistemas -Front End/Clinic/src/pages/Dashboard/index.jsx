@@ -1,6 +1,7 @@
 import ConsultsCounter from '../../components/counters/ConsultationCounter'
 import ExamCounter from '../../components/counters/ExamCounter'
 import PatientsCounter from '../../components/counters/PatientsCounter'
+import PatientsList from '../../components/PatientsList'
 
 const Dashboard = () => {
     return (
@@ -14,7 +15,7 @@ const Dashboard = () => {
             </div>
 
             {/* Lista de pacientes */}
-            <h2>Lista de pacientes</h2>
+            <PatientsList/>
         </div>
     )
 }
