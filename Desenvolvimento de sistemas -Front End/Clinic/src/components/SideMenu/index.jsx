@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { Link, useNavigate, NavLink } from 'react-router'
 import {
     MdDashboard,
     MdExitToApp,
@@ -14,7 +14,6 @@ import {
 
 import { useAuth } from '../../contexts/AuthContext'
 import { useState } from 'react'
-import { NavLink } from 'react-router'
 
 
 
@@ -65,39 +64,71 @@ const SideMenu = () => {
                 <ul className='space-y-3'>
                     <li>
                         <NavLink
-                            to='/dashboard'
-                            className='flex items-center gap-3 hover:text-cyan-300'
+                            to="/dashboard"
+                            className={({ isActive }) =>
+                                `flex gap-2 hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-white"
+                                }`
+                            }
                         >
                             <MdDashboard size={20} />
                             {!isCollapsed && <span>Início</span>}
                         </NavLink>
+
+
                     </li>
                     <li>
                         <NavLink
-                            to='/pacientes'
-                            className='flex items-center gap-3 hover:text-cyan-300'
-                        >
-                            <FaUserPlus size={20} />
-                            {!isCollapsed && <span>Pacientes</span>}
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to='/consultas'
-                            className='flex items-center gap-3 hover:text-cyan-300'
+                            to="/prontuarios"
+                            className={({ isActive }) =>
+                                `flex gap-2 hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-white"
+                                }`
+                            }
                         >
                             <FaCalendarCheck size={20} />
-                            {!isCollapsed && <span>Consultas</span>}
+                            {!isCollapsed && <span>Prontuários</span>}
                         </NavLink>
+
+
                     </li>
                     <li>
                         <NavLink
-                            to='/exames'
-                            className='flex items-center gap-3 hover:text-cyan-300'
+                            to="/pacientes"
+                            className={({ isActive }) =>
+                                `flex gap-2 hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-white"
+                                }`
+                            }
+                        >
+                            <FaUserPlus size={20} />
+                            {!isCollapsed && <span>Registrar Paciente</span>}
+                        </NavLink>
+
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/consultas"
+                            className={({ isActive }) =>
+                                `flex gap-2 hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-white"
+                                }`
+                            }
+                        >
+                            <MdMenu size={20} />
+                            {!isCollapsed && <span>Consultas</span>}
+                        </NavLink>
+
+
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/exames"
+                            className={({ isActive }) =>
+                                `flex gap-2 hover:text-cyan-300 ${isActive ? "text-cyan-300" : "text-white"
+                                }`
+                            }
                         >
                             <FaListAlt size={20} />
                             {!isCollapsed && <span>Exames</span>}
                         </NavLink>
+
                     </li>
                 </ul>
             </nav>
@@ -114,7 +145,7 @@ const SideMenu = () => {
                 </button>
             </div>
 
-        </aside>
+        </aside >
     )
 }
 
