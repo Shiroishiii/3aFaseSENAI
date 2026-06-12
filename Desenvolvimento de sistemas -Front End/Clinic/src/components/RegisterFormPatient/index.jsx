@@ -490,8 +490,6 @@ function RegisterFormPatient() {
                 </button>
 
             </div>
-
-
         </form>
     )
 }
