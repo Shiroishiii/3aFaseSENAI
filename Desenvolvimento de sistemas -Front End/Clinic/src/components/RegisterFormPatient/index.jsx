@@ -50,7 +50,7 @@ function RegisterFormPatient() {
         })) //operador spread e propriedade computada
     }
 
-    // requisição para api viacep
+    // requisição para api viacep 
 
     const fetchAddressData = async (cep) => {
         try {
@@ -81,10 +81,69 @@ function RegisterFormPatient() {
 
     }
 
+
+    //validação da data de nascimento
+
+    const yesterday = new Date() // retorna nesse exemplo => Mon Jun 15 2026 14:30:00 GMT-0300
+    yesterday.setDate(yesterday.getDate() - 1) // retorna o dia atual menos um (ontem)
+
+    //toISOString retorna uma string no formato 2026-06-14T17:30:00.000Z
+    /*
+    2026-06-14 → data
+    T → separador
+    17:30:00.000Z → horário UTC
+    */
+
+    /*
+    .split("T")[0]
+    separa a string no caractere T
+    E pega a primeira parte do do índice devolvido, no caso "2026-06-14"
+
+    <input
+        type="date"
+        max="2026-06-14"
+    />
+
+    */
+
+
+    const maxBirthDate = yesterday.toISOString().split("T")[0]
+
     //submit form
 
     const handleSubmit = async (e) => {
+
+        const selectedDate = new Date(formData.birthdate)
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+
+            if (selectedDate >= today) {
+                toast.error("A data de nascimento deve ser anterior à data atual.", {
+                    autoClose: 2000,
+                    hideProgressBar: true
+                })
+                
+                return
+            }
+
         e.preventDefault()
+
+        const maxBirthDate = yesterday.toISOString().split("T")[0]
+
+        const validateDate = () => {
+            const selectedDate = new Date(formData.birthdate)
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+
+            if (selectedDate >= today) {
+                toast.error("A data de nascimento deve ser anterior à data atual.", {
+                    autoClose: 2000,
+                    hideProgressBar: true
+                })
+                return
+            }
+        }
+
         setIsSaving(true)
 
         try {
@@ -187,6 +246,8 @@ function RegisterFormPatient() {
                         id='birthdate'
                         value={formData.birthdate}
                         onChange={handleInputChange}
+                        onBlur={validateDate}
+                        max={maxBirthDate}
                         required
                         className='w-full border p-2 rounded-lg focus:ring-2 focus:ring-cyan-600 outline-none'
                     />
@@ -199,6 +260,7 @@ function RegisterFormPatient() {
                     <IMaskInput
                         mask="000.000.000-00"
                         name='cpf'
+                        minLength={14}
                         id='cpf'
                         value={formData.cpf}
                         onAccept={(value) => setFormData((prev) => ({ ...prev, cpf: value }))}
@@ -388,6 +450,7 @@ function RegisterFormPatient() {
                     />
                 </fieldset>
 
+
                 {/* Rua */}
                 <fieldset>
                     <label htmlFor='street' className='block text-sm font-medium mb-1'>Rua</label>
@@ -401,18 +464,20 @@ function RegisterFormPatient() {
                     />
                 </fieldset>
 
-                {/* Numero */}
+
+                {/* Número */}
                 <fieldset>
-                    <label htmlFor='street' className='block text-sm font-medium mb-1'>Número</label>
+                    <label htmlFor='number' className='block text-sm font-medium mb-1'>Número</label>
                     <input
                         type='text'
-                        name='street'
-                        id='street'
-                        value={formData.address.street}
+                        name='number'
+                        id='number'
+                        value={formData.address.number}
                         onChange={handleAddressChange}
                         className='w-full border p-2 rounded-lg focus:ring-2 focus:ring-cyan-600 outline-none'
                     />
                 </fieldset>
+
 
                 {/* Complemento */}
                 <fieldset>
@@ -427,6 +492,8 @@ function RegisterFormPatient() {
                     />
                 </fieldset>
 
+
+
                 {/* Referência */}
                 <fieldset>
                     <label htmlFor='reference' className='block text-sm font-medium mb-1'>Referência</label>
@@ -439,6 +506,7 @@ function RegisterFormPatient() {
                         className='w-full border p-2 rounded-lg focus:ring-2 focus:ring-cyan-600 outline-none'
                     />
                 </fieldset>
+
 
                 {/* Bairro */}
                 <fieldset>
@@ -466,6 +534,7 @@ function RegisterFormPatient() {
                     />
                 </fieldset>
 
+
                 {/* Estado */}
                 <fieldset>
                     <label htmlFor='state' className='block text-sm font-medium mb-1'>Estado</label>
@@ -475,22 +544,28 @@ function RegisterFormPatient() {
                         id='state'
                         value={formData.address.state}
                         onChange={handleAddressChange}
+                        disabled="true"
                         className='w-full border p-2 rounded-lg focus:ring-2 focus:ring-cyan-600 outline-none'
                     />
                 </fieldset>
-            </div>
 
-            <div className='flex justify-end gap-3 pt-4'>
+            </div >
+
+            {/* botão de envio */}
+
+            < div className='flex justify-end gap-3 pt-4' >
                 <button
-                type='submit'
-                disabled={isSaving}
-                className='px-4 py-2 bg-cyan-700 text-white rounded-lg hover:bg-cyan-600 disabled:opacity-0'
+                    type='submit'
+                    disabled={isSaving}
+                    className='px-4 py-2 bg-cyan-700 text-white rounded-lg hover:bg-cyan-600 disabled:opacity-50'
                 >
-                    {isSaving ? "salvando" : "Salvar"}
-                </button>
+                    {isSaving ? "Salvando..." : "Salvar"}
 
-            </div>
-        </form>
+                </button>
+            </div >
+
+
+        </form >
     )
 }
 
