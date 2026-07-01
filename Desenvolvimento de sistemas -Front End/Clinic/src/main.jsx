@@ -18,6 +18,7 @@ import MedicalRecordList from './components/MedicalRecordList';
 import RegisterFormPatient from './components/RegisterFormPatient';
 import ConsultationForm from './components/ConsultationForm';
 import RegisterExams from './components/RegisterExams';
+import PatientDetail from './components/PatientDetail';
 
 
 const router = createBrowserRouter([

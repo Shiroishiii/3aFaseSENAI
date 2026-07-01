@@ -3,8 +3,10 @@ import { useState } from "react"
 import axios from "axios"
 import { toast } from "react-toastify"
 import Modal from "../Modal"
+import { useParams } from "react-router";
 
 function ConsultationForm() {
+    const { id } = useParams();
     const [searchTerm, setSearchTerm] = useState('')
     const [patients, setPatients] = useState([])
     const [selectedPatient, setSelectedPatient] = useState(null)
@@ -23,16 +25,28 @@ function ConsultationForm() {
     // Busca Assincrona
 
     useEffect(() => {
-        const fetchPatients = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/patients')
-                setPatients(response.data)
-            } catch (error) {
-                console.error('Erro ao obter dados dos pacientes')
+    const fetchPatients = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/patients");
+            setPatients(response.data);
+
+            if (id) {
+                const patient = response.data.find(
+                    (p) => String(p.id) === String(id)
+                );
+
+                if (patient) {
+                    setSelectedPatient(patient);
+                    setIsModalOpen(true);
+                }
             }
+        } catch (error) {
+            console.error("Erro ao obter dados dos pacientes", error);
         }
-        fetchPatients()
-    }, [])
+    };
+
+    fetchPatients();
+}, [id]);
 
     // Funções auxiliares
 
@@ -85,7 +99,7 @@ function ConsultationForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (selectedPatient) return
+        if (!selectedPatient) return
 
         try {
             setIsSaving(true)
@@ -105,11 +119,14 @@ function ConsultationForm() {
             handleCloseModal()
 
         } catch (error) {
-            console.error("Erro ao cadastrar consulta!")
-            toast.error("Erro ao cadastrar consulta!", {
-                autoClose: 2000,
+            console.error("Erro ao cadastrar consulta!", error)
+            const serverMessage = error.response?.data?.message
+            toast.error(serverMessage || "Erro ao cadastrar consulta! Verifique se o json-server (npm run server) está rodando.", {
+                autoClose: 3000,
                 hideProgressBar: true
             })
+        } finally {
+            setIsSaving(false)
         }
     }
 

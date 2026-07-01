@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useParams } from "react-router";
 
 //modal
 import Modal from '../Modal'
@@ -8,6 +9,7 @@ import Modal from '../Modal'
 const RegisterExams = () => {
 
     const [searchTerm, setSearchTerm] = useState("")
+    const { id } = useParams();
     const [patients, setPatients] = useState([])
     const [selectedPatient, setSelectedPatient] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,8 +20,10 @@ const RegisterExams = () => {
         date: "",
         time: "",
         type: "",
+        laboratory: "",
         documentUrl: "",
-        results: ""
+        results: "",
+        status: ""
     })
 
     // busca pacientes
@@ -27,14 +31,28 @@ const RegisterExams = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/patients")
-                setPatients(response.data)
+                const response = await axios.get("http://localhost:3000/patients");
+
+                setPatients(response.data);
+
+                if (id) {
+                    const patient = response.data.find(
+                        (p) => String(p.id) === String(id)
+                    );
+
+                    if (patient) {
+                        setSelectedPatient(patient);
+                        setIsModalOpen(true);
+                    }
+                }
+
             } catch (error) {
-                console.error("Erro ao obter dados dos pacientes", error)
+                console.error("Erro ao obter dados dos pacientes", error);
             }
-        }
-        fetchPatients()
-    }, [])
+        };
+
+        fetchPatients();
+    }, [id]);
 
 
     // funções auxiliares
@@ -81,7 +99,8 @@ const RegisterExams = () => {
             time: "",
             type: "",
             documentUrl: "",
-            results: ""
+            results: "",
+            status: ""
         })
     }
 
@@ -115,6 +134,8 @@ const RegisterExams = () => {
                 autoClose: 2000,
                 hideProgressBar: true
             })
+        } finally {
+            setIsSaving(false)
         }
     }
 
@@ -123,7 +144,6 @@ const RegisterExams = () => {
 
         if (!file) return;
 
-        // Validar tipo
         const allowedTypes = [
             "application/pdf",
             "image/png",
@@ -131,26 +151,24 @@ const RegisterExams = () => {
         ];
 
         if (!allowedTypes.includes(file.type)) {
-            alert("Apenas PDF, PNG ou JPG são permitidos.");
+            toast.error("Apenas PDF, PNG ou JPG são permitidos.");
             e.target.value = "";
             return;
         }
 
-        // Validar tamanho (5MB)
         const maxSize = 5 * 1024 * 1024;
 
         if (file.size > maxSize) {
-            alert("O arquivo deve ter no máximo 5MB.");
+            toast.error("O arquivo deve ter no máximo 5MB.");
             e.target.value = "";
             return;
         }
 
-        setFormData({
-            ...formData,
-            documentUrl: file
-        });
+        setFormData((prev) => ({
+            ...prev,
+            documentUrl: file.name // salva apenas o nome do arquivo
+        }));
     };
-
 
     return (
         <section className='p-6 text-gray-800'>
@@ -323,8 +341,23 @@ const RegisterExams = () => {
                                     />
                                 </div>
 
+                                <div>
+                                    <label htmlFor="status" className="block text-sm font-medium mb-1">
+                                        Status
+                                    </label>
 
-
+                                    <select
+                                        id="status"
+                                        name="status"
+                                        value={formData.status}
+                                        onChange={handleInputChange}
+                                        className="w-full border p-2 rounded-lg"
+                                    >
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Concluído">Concluído</option>
+                                        <option value="Cancelado">Cancelado</option>
+                                    </select>
+                                </div>
 
                                 {/* botões */}
 

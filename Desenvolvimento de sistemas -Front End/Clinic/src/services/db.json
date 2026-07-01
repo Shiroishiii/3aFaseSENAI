@@ -117,10 +117,31 @@
       "medication": "Lorem Ipsum",
       "dosagePrecautions": "Lorem Ipsum",
       "id": "1"
+    },
+    {
+      "patientId": "1",
+      "reason": "asdasdassdsadasd",
+      "date": "2026-06-03",
+      "time": "23:22",
+      "description": "sadsada",
+      "medication": "dasdsadasd",
+      "dosagePrecautions": "asdadasdas",
+      "id": "h2Ih3m4fiE0"
+    },
+    {
+      "patientId": "1",
+      "reason": "sdadasda",
+      "date": "2026-06-23",
+      "time": "23:13",
+      "description": "dadassdasd",
+      "medication": "asdadas",
+      "dosagePrecautions": "dasdasdadsadas",
+      "id": "o3eKwo3VqCk"
     }
   ],
   "exams": [
     {
+      "patientId": "2",
       "name": "Lorem",
       "date": "12-07-2025",
       "time": "15:20",
@@ -129,6 +150,40 @@
       "documentUrl": "https://docexemplo.com",
       "results": "Lorem",
       "id": "1"
+    },
+    {
+      "patientId": "1",
+      "name": "",
+      "date": "2026-06-19",
+      "time": "20:56",
+      "type": "sadsadsad",
+      "laboratory": "asdadad",
+      "documentUrl": "https://docexemplo.com",
+      "results": "",
+      "id": "SvS-RQz0sIY"
+    },
+    {
+      "patientId": "1",
+      "name": "",
+      "date": "2026-06-09",
+      "time": "17:59",
+      "type": "zcxzc",
+      "laboratory": "zxczczx",
+      "documentUrl": "Captura de tela 2026-04-23 215455.png",
+      "results": "",
+      "id": "S9og23X2pQg"
+    },
+    {
+      "patientId": "1",
+      "name": "",
+      "date": "2026-06-19",
+      "time": "00:10",
+      "type": "dasdasdas",
+      "laboratory": "sasdadas",
+      "documentUrl": "Captura de tela 2026-04-23 215455.png",
+      "results": "",
+      "status": "Concluído",
+      "id": "Cz4sg5PbJOI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

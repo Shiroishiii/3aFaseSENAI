@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+/* ---- Feature: Exportar PDF do prontuário ----
+   Ao chamar window.print() na tela de detalhes do paciente,
+   escondemos tudo (menu lateral, cabeçalho, botões de ação)
+   e deixamos visível apenas a área do prontuário. */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #prontuario-print-area,
+    #prontuario-print-area *,
+    .print-record-section,
+    .print-record-section * {
+        visibility: visible;
+    }
+
+    #prontuario-print-area {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .print-record-section {
+        margin-top: 1rem;
+    }
+}
